@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 布局的背景色 -->
+    <color name="layout_bg">#0F1418</color>
+    <color name="layout_bg_alpha">#330F1418</color>
+    <color name="text_bg">#ffffff</color>
+    
+    <color name="text_white">#d9d9d9</color>
+    <color name="text_red">#ff0000</color>
+    <color name="all_k_color">#00B6DF</color>
+    <color name="all_blue_color_pressd">#990066CC</color>
+    <color name="thinkive_ma_5">#E34AAD</color>
+    <color name="thinkive_ma_10">#E7B231</color>
+    <color name="thinkive_ma_20">#249CE1</color>
+</resources>

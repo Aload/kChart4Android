@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg" >
+
+    <LinearLayout
+        android:id="@+id/ll_sell_buy"
+        android:layout_width="120dip"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical"
+        android:paddingBottom="20dip"
+        android:paddingTop="10dip" >
+
+        <ListView
+            android:id="@+id/listview_sell"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_marginBottom="1dip"
+            android:layout_weight="1" >
+        </ListView>
+
+        <ListView
+            android:id="@+id/listview_buy"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_marginTop="1dip"
+            android:layout_weight="1" >
+        </ListView>
+    </LinearLayout>
+
+    <com.wuchuanlong.stockview.chart.TimeKChartView
+        android:id="@+id/stock_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/ll_sell_buy"
+        android:paddingBottom="20dip"
+        android:paddingLeft="30dip"
+        android:paddingTop="10dip" />
+
+    <com.wuchuanlong.stockview.chart.CircleLoadingView
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

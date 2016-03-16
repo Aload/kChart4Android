@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="loading_text_color" format="color|reference" />
+    <declare-styleable name="loading_dialog">
+        <attr name="loading_text_color" />
+    </declare-styleable>
+
+</resources>

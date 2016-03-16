@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout_bg"
+    >
+
+    <com.wuchuanlong.stockview.chart.StockView
+        android:id="@+id/stock_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="20dip"
+        android:paddingLeft="35dip"
+        android:paddingRight="10dip"
+        android:paddingTop="10dip" />
+
+    <com.wuchuanlong.stockview.chart.CircleLoadingView
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

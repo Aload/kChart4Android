@@ -1,0 +1,120 @@
+package com.example.stockview.chart;
+
+
+public class SingleStockInfo {
+	int color;// 如果是跌，标记颜色为绿色  如果是涨，标记颜色为红色
+	double open ; // 开盘价
+	double close; // 收盘价
+	double high;// 最高价
+	double low ;// 最高价
+	int date;// 日期
+	double dealCount;// 一天成交成交的手数，总成交量
+	double dealPrice;// 总成交金额;
+	// 分时图数据
+	// 分钟数
+    private int minute;
+    // 现价
+    private double now;
+    //	均价
+    private double avgPrice;
+	
+	
+	double maValue5;// 5日均线值
+	double maValue10;// 10日均线
+	double maValue20;// 20日均线
+	
+	Type type;// 属于日K，还是周K等
+	
+	public Type getType() {
+		return type;
+	}
+	public void setType(Type type) {
+		this.type = type;
+	}
+	public double getMaValue10() {
+		return maValue10;
+	}
+	public int getMinute() {
+		return minute;
+	}
+	public void setMinute(int minute) {
+		this.minute = minute;
+	}
+	public double getNow() {
+		return now;
+	}
+	public void setNow(double now) {
+		this.now = now;
+	}
+	public double getAvgPrice() {
+		return avgPrice;
+	}
+	public void setAvgPrice(double avgPrice) {
+		this.avgPrice = avgPrice;
+	}
+	public void setMaValue10(double maValue10) {
+		this.maValue10 = maValue10;
+	}
+	public double getMaValue20() {
+		return maValue20;
+	}
+	public void setMaValue20(double maValue20) {
+		this.maValue20 = maValue20;
+	}
+	public double getMaValue5() {
+		return maValue5;
+	}
+	public void setMaValue5(double maValue) {
+		this.maValue5 = maValue;
+	}
+	public int getColor() {
+		return color;
+	}
+	public void setColor(int color) {
+		this.color = color;
+	}
+	public double getOpen() {
+		return open;
+	}
+	public void setOpen(double open) {
+		this.open = open;
+	}
+	public double getClose() {
+		return close;
+	}
+	public void setClose(double close) {
+		this.close = close;
+	}
+	public double getHigh() {
+		return high;
+	}
+	public void setHigh(double high) {
+		this.high = high;
+	}
+	public double getLow() {
+		return low;
+	}
+	public void setLow(double low) {
+		this.low = low;
+	}
+	public int getDate() {
+		return date;
+	}
+	public void setDate(int date) {
+		this.date = date;
+	}
+	public double getDealCount() {
+		return dealCount;
+	}
+	public void setDealCount(double dealCount) {
+		this.dealCount = dealCount;
+	}
+	public double getDealPrice() {
+		return dealPrice;
+	}
+	public void setDealPrice(double dealPrice) {
+		this.dealPrice = dealPrice;
+	}
+	
+	
+}

@@ -1,0 +1,252 @@
+package com.example.stockview;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.example.stockview.chart.ChartTouchEvent;
+import com.example.stockview.chart.KChartUtil;
+import com.example.stockview.chart.PriceInfo;
+import com.example.stockview.chart.SingleStockInfo;
+import com.example.stockview.chart.StockCache;
+import com.example.stockview.chart.Type;
+import com.example.stockview.chart.WuDangInfo;
+import com.example.stockview.fragment.DayChartFragment;
+import com.example.stockview.fragment.MonthChartFragment;
+import com.example.stockview.fragment.TimeChartFragment;
+import com.example.stockview.fragment.WeekChartFragment;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
+
+public class BigStockChartActivity extends FragmentActivity implements ChartTouchEvent {
+	ViewPager viewPager;
+	private TextView mStockNameTv;// 名称
+	private TextView mStockCodeTv;// 代码
+	private TextView mNowPriceTv;// 当前价
+	private TextView mStockZdTv;// 涨跌
+	private TextView mStockZfTv;// 涨跌幅
+	private TextView mOpenPriceTv;// 今开
+	private TextView mHighPriceTv;// 最高价
+	private TextView mDealCountTv;// 成交量
+	private TextView mLowPriceTv;// 最低价
+	private TextView mHsTv;// 换手率
+	private TextView mZfTv;// 振幅
+	private String name;
+	private String code;
+	private String market;
+	final int kSize = 4;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		setContentView(R.layout.activity_main);
+		name = StockCache.get(StockCache.NAME, String.class);
+		code = StockCache.get(StockCache.CODE, String.class);
+		market = StockCache.get(StockCache.MARKET,String.class);
+//		name = StockCache.get(StockCache.STOCK_TYPE, String.class);
+		initView();
+		initData();
+	}
+
+	private void initView() {
+		viewPager = (ViewPager) findViewById(R.id.viewpager);
+		mStockNameTv = (TextView) findViewById(R.id.tv_stock_name);// 名称
+		mStockCodeTv = (TextView) findViewById(R.id.tv_stock_code);// 代码
+		mNowPriceTv = (TextView) findViewById(R.id.tv_now_price);// 当前价
+		mStockZdTv = (TextView) findViewById(R.id.tv_stock_zd);// 涨跌
+		mStockZfTv = (TextView) findViewById(R.id.tv_stock_zf);// 涨跌幅
+		mOpenPriceTv = (TextView) findViewById(R.id.tv_open_price);// 今开
+		mHighPriceTv = (TextView) findViewById(R.id.tv_high_price);// 最高价
+		mDealCountTv = (TextView) findViewById(R.id.tv_deal_count);// 成交量
+		mLowPriceTv = (TextView) findViewById(R.id.tv_low_price);// 最低价
+		mHsTv = (TextView) findViewById(R.id.tv_hs);// 换手率
+		mZfTv = (TextView) findViewById(R.id.tv_zf);// 振幅
+
+		mStockNameTv.setText(name);
+		mStockCodeTv.setText(code);
+	}
+
+	public void initData() {
+		viewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager()));
+		viewPager.setOnPageChangeListener(new MyOnPageChangeListener());
+		viewPager.setOffscreenPageLimit(kSize);
+		viewPager.setCurrentItem(0);
+	}
+
+	/**
+	 * 手指触摸
+	 */
+	public void updateRelativeView(SingleStockInfo info, Type chartType) {
+		if (info != null) {
+			// 手指触摸
+			// 画涨跌幅
+			PriceInfo stock = StockCache.get(StockCache.STOCK_INFO, PriceInfo.class);
+			if (stock != null && chartType.getValue().equals(Type.HOUR.getValue())) {
+				String priceZd = KChartUtil.getZdF(info.getNow(), stock.getYesterday());
+				mStockZdTv.setText(String.valueOf(KChartUtil.format2(stock.getYesterday() - info.getNow())));// 涨跌
+				mStockZfTv.setText(priceZd);// 涨跌幅
+				mNowPriceTv.setText(info.getNow() + "");// 当前价
+			} else {
+				mStockZdTv.setText("--");// 涨跌
+				mStockZfTv.setText("--");// 涨跌幅
+				mNowPriceTv.setText("--");// 当前价
+			}
+
+			mOpenPriceTv.setText(info.getOpen() + "");// 今开
+			mHighPriceTv.setText(info.getHigh() + "");// 最高价
+			mDealCountTv.setText((Math.rint(info.getDealCount() / 10000)) + "万手");// 成交量
+			mLowPriceTv.setText(info.getLow() + "");// 最低价
+
+			mHsTv.setText("--");// 换手率
+			mZfTv.setText("--");// 振幅
+		} else {
+			// 手指离开
+			PriceInfo stockInfo = StockCache.get("stock", PriceInfo.class);
+			updateRelativeView(stockInfo, chartType);
+		}
+	}
+
+	public void updateRelativeView(PriceInfo info, Type chartType) {
+		if (info != null) {
+			mNowPriceTv.setText(info.getNow() + "");// 当前价
+			mStockZdTv.setText(info.getUp() + "");// 涨跌
+			mStockZfTv.setText(info.getUppercent() + "");// 涨跌幅
+			mHsTv.setText(info.getHsl() + "");// 换手率
+			mZfTv.setText(info.getFlux() + "");// 振幅
+			mOpenPriceTv.setText(info.getOpen() + "");// 今开
+			mHighPriceTv.setText(info.getHigh() + "");// 最高价
+			mDealCountTv.setText(info.getVolume());// 成交量
+			mLowPriceTv.setText(info.getLow() + "");// 最低价
+		}
+	}
+
+	@Override
+	public void ifParentIterceptorEvent(boolean interceptor) {
+		viewPager.requestDisallowInterceptTouchEvent(interceptor);
+	}
+
+	public void onClick(View view) {
+		int id = view.getId();
+		if (id == R.id.tv_time) {
+			viewPager.setCurrentItem(0);
+		} else if (id == R.id.tv_day) {
+			viewPager.setCurrentItem(1);
+		} else if (id == R.id.tv_week) {
+			viewPager.setCurrentItem(2);
+		} else if (id == R.id.tv_month) {
+			viewPager.setCurrentItem(3);
+		} else if (id == R.id.tv_finish) {
+			finish();
+		}
+	}
+
+	class MyOnPageChangeListener implements OnPageChangeListener {
+
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
+			// updateNavigater(arg0);
+
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
+			updateNavigater(arg0);
+		}
+
+		@Override
+		public void onPageSelected(int arg0) {
+
+		}
+
+	}
+
+	class MyViewPagerAdapter extends FragmentPagerAdapter {
+
+		public MyViewPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		List<Fragment> fragmentList = new ArrayList<>(kSize);
+
+		@Override
+		public Fragment getItem(int arg0) {
+			return getFragmentByPosition(arg0);
+		}
+
+		@Override
+		public int getCount() {
+			return kSize;
+		}
+
+		Fragment timeFragment;
+		Fragment dayFragment;
+		Fragment weekFragment;
+		Fragment monthFragment;
+
+		private Fragment getFragmentByPosition(int position) {
+			Fragment fragment = null;
+			switch (position) {
+			case 0:
+				if (timeFragment == null) {
+					timeFragment = new TimeChartFragment();
+					fragmentList.add(0, timeFragment);
+				}
+				fragment = fragmentList.get(0);
+				break;
+			case 1:
+				if (dayFragment == null) {
+					dayFragment = new DayChartFragment();
+					fragmentList.add(1, dayFragment);
+				}
+				fragment = fragmentList.get(1);
+				break;
+			case 2:
+				if (weekFragment == null) {
+					weekFragment = new WeekChartFragment();
+					fragmentList.add(2, weekFragment);
+				}
+				fragment = fragmentList.get(2);
+				break;
+			case 3:
+				if (monthFragment == null) {
+					monthFragment = new MonthChartFragment();
+					fragmentList.add(3, monthFragment);
+				}
+				fragment = fragmentList.get(3);
+				break;
+			}
+			return fragment;
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+		}
+	}
+
+	public void updateNavigater(int position) {
+		int normalRes = R.drawable.stock_k_time_text_normal;
+		int pressRes = R.drawable.stock_k_time_text_press;
+		findViewById(R.id.tv_time).setBackgroundResource(position == 0 ? pressRes : normalRes);
+		findViewById(R.id.tv_day).setBackgroundResource(position == 1 ? pressRes : normalRes);
+		findViewById(R.id.tv_week).setBackgroundResource(position == 2 ? pressRes : normalRes);
+		findViewById(R.id.tv_month).setBackgroundResource(position == 3 ? pressRes : normalRes);
+	}
+
+	@Override
+	public void clickedTwo() {
+		finish();
+	}
+
+}
